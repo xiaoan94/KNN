@@ -114,6 +114,22 @@ np.tile（A,(2,2,3)）表示A的第一个维度重复3遍，第二个维度重�
 	>>> sorted(list1,reverse = False)
 	[('david', 90), ('lily', 95), ('mary', 90), ('sara', 80)]
 	#Python 3.X 的版本中已经没有 cmp 函数，如果你需要实现比较功能，需要引入 operator 模块，适合任何对象
+	#介绍operator.itemgetter函数：operator.itemgetter函数获取的不是值，而是定义了一个函数
+	>>> import operator
+	>>> a = [1,2,3]
+	>>> b = operator.itemgetter(0)
+	>>> b(a)
+	1
+	#用operator.itemgetter函数排序
+	>>> from operator import itemgetter
+    >>> sorted(list1, key=itemgetter(1))
+    [('sara', 80), ('david', 90), ('mary', 90), ('lily', 95)]
+    >>> sorted(list1, key=itemgetter(0))
+    [('david', 90), ('lily', 95), ('mary', 90), ('sara', 80)]
+    #多级排序
+    >>> sorted(list1, key=itemgetter(0,1))
+    [('david', 90), ('lily', 95), ('mary', 90), ('sara', 80)]
+
 
 
 

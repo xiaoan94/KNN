@@ -46,8 +46,9 @@ class KNN(object):
             voteIlabel = self.labels[sortedDistIndicies[i]]  # 取前k个距离最小的样本的标签
             classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1  # 计算标签的频数
 
-        sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)
-        return sortedClassCount[0][0]
+        # 对距离最小的前k个标签的频数进行降序排序，返回频数最大时对应的标签
+        sortedClassCount = sorted(classCount.iteritems(), key=operator.itemgetter(1), reverse=True)  #对classCount中的频数进行降序排序
+        return sortedClassCount[0][0]  # 返回频数最大时，对应的标签
 
 
 
@@ -56,8 +57,9 @@ class KNN(object):
 
 if __name__ == '__main__':
 
-    tit = KNN(3, [0, 0])
+    tit = KNN(k=3, inX=[0, 0])
     tit.createDataSet()
-    tit.classifyO()
+    result = tit.classifyO()
+    print result
 
     print "---done---"

@@ -57,7 +57,7 @@ class KNN(object):
 
 if __name__ == '__main__':
 
-    tit = KNN(k=3, inX=[0, 0])
+    tit = KNN(k=3, inX=[1.0, 1.0])
     tit.createDataSet()
     result = tit.classifyO()
     print result

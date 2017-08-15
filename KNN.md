@@ -257,7 +257,22 @@ K近邻算法学习
 
     [('david', 90), ('lily', 95), ('mary', 90), ('sara', 80)]
 ```
+>* plt.figure()  # 创建一幅图，参数可有可无
+figsize=(width, height)  # width、height指定图的大小，单位inch
+dpi  # dot per inch，像素密度，类似于iphone显示屏的ppi，视网膜屏的ppi要求326ppi,在960x640的3.5寸屏上。
+用plt调用figure(),没有保存其返回值，函数有返回值，返回一个Figure对象
 
+>* plt.plot(x,y)，将数据画成曲线图，x对应横坐标，y对应纵坐标，x，y都是一个一维的list。
+plot除了x,y这两个参数，还有其他参数，比如：指定线的样式为虚线，点线。指定颜色和线的宽度，可以使用关键字参数指定。指定label，作为图例的文字。
+
+>* 关于标注和标题
+plt.xlabel(text),plt.ylabel(text),plt.title(text)，使用关键字参数fontsize=16制定字体大小。公式的输入支持latex格式的公式输入，即两个$中间写latex的公式，保证字符串是raw格式。在线的latex公式编辑测试，http://www.codecogs.com/latex/eqneditor.php
+
+>* 关于坐标轴范围，通过plt.axis([xmin xmax ymin ymax]指定
+
+>* 关于网格，plt.grid(True)显示网格
+
+>* 关于图例，在画曲线的时候制定了label，则plt.legend()就可以了。在matplotlib里面。有专门的一个legend的类
 
 
 

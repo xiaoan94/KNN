@@ -257,6 +257,16 @@ K近邻算法学习
 
     [('david', 90), ('lily', 95), ('mary', 90), ('sara', 80)]
 ```
+# Matplotlib.pylot的简单用法
+```python
+    >>> import matplotlib.pyplot as plt
+
+    >>> plt.figure()  # 创建一幅图
+
+    >>> plt.plot(x,y)  # 画出曲线
+
+    >>> plt.show()  # 显示
+```
 >* plt.figure()  # 创建一幅图，参数可有可无
 figsize=(width, height)  # width、height指定图的大小，单位inch
 dpi  # dot per inch，像素密度，类似于iphone显示屏的ppi，视网膜屏的ppi要求326ppi,在960x640的3.5寸屏上。

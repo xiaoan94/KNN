@@ -284,9 +284,48 @@ plt.xlabel(text),plt.ylabel(text),plt.title(text)，使用关键字参数fontsiz
 
 >* 关于图例，在画曲线的时候制定了label，则plt.legend()就可以了。在matplotlib里面。有专门的一个legend的类
 
+#subplot简单介绍
 
+>* subplot能在一张图里放多个子图，与Matlab里的subplot类似
 
+>* pyplot是一个有状态的对象，包含了当前的图，画图区域等
 
+>* pyplot通过调用subplot或者add_subplot来增加子图
+
+>* p1 = plt.subplot(211) 或者 p1 = plt.subplot(2,1,1)， 表示创建一个2行，1列的图，p1为第一个子图
+
+>* 使用p1来调用相关的函数在p1上画曲线，设置标注标题图例等
+
+>* 与pyplot相同的是，可以直接使用pyplot画图，添加label等，也可以是通过调用P1实现。
+与pyplot不同的是，有一些函数的名字不太一样，添加坐标轴的标注的函数为set_xlabel和set_ylabel
+
+>* 添加标题set_title，只是给子图添加标题，由于pyplot是一个有状态的对象，所以pyplot.title也是给当前子图添加标题。
+如果要给整个图添加标题，可以使用pyplot.suptitle(text)
+
+#scatter()绘制散点图
+>使用plot()绘图时，如果指定样式参数为仅绘制数据点，那么所绘制的就是一幅散列图。但是这种方法所绘制的点无法单独指定颜色和大小。
+scatter()所绘制的散列图却可以指定每个点的颜色和大小。
+matplotlib.pyplot.scatter(x, y, s=20, c='b', marker='o', cmap=None, norm=None, vmin=None, vmax=None, alpha=None, linewidths=None, verts= None)
+
+>* scatter()的前两个参数是数组，分别指定每个点的X轴和Y轴的坐标。
+
+>* s参数指定点的大 小，值和点的面积成正比。它可以是一个数，指定所有点的大小；也可以是数组，分别对每个点指定大小。
+
+>* c参数指定每个点的颜色，可以是数值或数组。这里使用一维数组为每个点指定了一个数值。通过颜色映射表，每个数值都会与一个颜色相对应。默认的颜色映射表中蓝色与最小值对应，红色与最大值对应。当c参数是形状为(N,3)或(N,4)的二维数组时，则直接表示每个点的RGB颜色。
+
+>* marker参数设置点的形状，可以是个表示形状的字符串，也可以是表示多边形的两个元素的元组，第一个元素表示多边形的边数，第二个元素表示多边形的样式，取值范围为0、1、2、3。0表示多边形，1表示星形，2表示放射形，3表示忽略边数而显示为圆形。
+
+>* alpha参数设置点的透明度
+
+>* lw参数设置线宽，lw是line width的缩写
+
+>* facecolors参数为“none”时，表示散列点没有填充色
+
+>* cmap参数默认为None，Colormap实例
+
+>* norm参数默认为None，数据亮度设置0-1，float数据
+
+>* vmin，vmax参数默认为None，亮度设置，如果norm实例已使用，该参数无效
 
 
 

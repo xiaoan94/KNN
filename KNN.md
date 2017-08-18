@@ -327,7 +327,45 @@ matplotlib.pyplot.scatter(x, y, s=20, c='b', marker='o', cmap=None, norm=None, v
 
 >* vmin，vmax参数默认为None，亮度设置，如果norm实例已使用，该参数无效
 
-
+# numpy.tile和numpy.repeat用法区别
+tile的案例
+```python
+>>> from numpy import *
+>>> a=array([10,20])
+>>> tile(a,(3,2)) #构造3X2个copy
+array([[10, 20, 10, 20],
+       [10, 20, 10, 20],
+       [10, 20, 10, 20]])
+>>> tile(42.0,(3,2))
+array([[ 42.,  42.],
+       [ 42.,  42.],
+       [ 42.,  42.]])
+>>>
+```
+repeat的案例
+```python
+>>> from numpy import *
+>>> repeat(7.,4)
+array([ 7.,  7.,  7.,  7.])
+>>> a=array([10,20])
+>>> a.repeat([3,2])
+array([10, 10, 10, 20, 20])
+>>> repeat(a,[3,2])
+array([10, 10, 10, 20, 20])
+>>> a=array([[10,20],[30,40]])
+>>> a.repeat([3,2],axis=0)
+array([[10, 20],
+       [10, 20],
+       [10, 20],
+       [30, 40],
+       [30, 40]])
+>>> a.repeat([3,2],axis=1)
+array([[10, 10, 10, 20, 20],
+       [30, 30, 30, 40, 40]])
+>>>
+```
+#numpy中的矩阵除法
+linalg.slove(mat1, mat2)
 
 
 

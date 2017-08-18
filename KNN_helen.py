@@ -23,7 +23,7 @@ import operator
 import pylab
 import sys
 reload(sys)
-sys.setdefaultencoding( "utf-8" )
+sys.setdefaultencoding("utf-8")
 
 import matplotlib
 import pdb
@@ -34,13 +34,20 @@ import matplotlib.pyplot as plt
 
 class KNNhelen(object):
 
-    def __init__(self, filename):
-        # self.k = k  # KNN算法中的k值(正整数）
-        # self.inX = inX  # 用于分类的输入向量
+    def __init__(self, k, inX, filename, hoRatio):
+        self.k = k  # KNN算法中的k值(正整数）
+        self.inX = inX  # 用于分类的输入向量
         self.filename = filename  # 训练样本的文件名字符串
-        self.returnmat = np.mat  # 存储训练样本中的特征数据，格式为矩阵
+        self.hoRatio = hoRatio  # 测试数据的大小，通常采用90%的数据作为训练样本训练分类器，其余的10%的数据作为测试样本去测试分类器
+
+        self.returnMat = np.mat  # 存储训练样本中的特征数据，格式为矩阵
         self.classLabelVector = []  # 存储类标签的向量
+        self.m = int  # 存储训练样本中的特征数据矩阵的行数
         self.classLabelVectornum = []  # 存储数字化的类标签的向量
+        self.minVals = np.array  # 存储训练样本中的特征数据矩阵的每一列的最小值
+        self.maxVals = np.array  # 存储训练样本中的特征数据矩阵的每一列的最大值
+        self.ranges = np.array  # 存储训练样本中的特征数据矩阵的每一列的极差，即数据的取值范围
+        self.normDateSet = np.mat  # 存储训练样本中的归一化后的特征数据，格式为矩阵
 
     # 处理训练样本，输入文件名字符串，将文本类型的数据转化为矩阵和向量，输出训练样本矩阵和类标签向量
     def file2matrix(self):
@@ -48,7 +55,7 @@ class KNNhelen(object):
         arrayOLines = fr.readlines()  # 逐行读取文本文件的数据
         numberOfLines = len(arrayOLines)  # 文件中的数据总行数
 
-        self.returnMat = np.zeros((numberOfLines, 3))  # 初始化矩阵，维度为样本数据总行数*3
+        self.returnMat = np.zeros((numberOfLines, 3))  # 初始化训练样本的特征数据矩阵，维度为样本数据总行数*3
         index = 0
         for line in arrayOLines:
             line = line.strip()  # 除去每一行的前后空格及换行符
@@ -56,6 +63,8 @@ class KNNhelen(object):
             self.returnMat[index, :] = listFromLine[0: 3]  # 每一行的特征数据存储到矩阵中的每一行
             self.classLabelVector.append(listFromLine[-1])  # 每一行的类标签存储到类标签向量中
             index = index + 1
+
+        self.m = self.returnMat.shape[0]  # 训练样本的特征矩阵的行数
 
         for label in self.classLabelVector:
             if label == 'didntLike':
@@ -69,13 +78,14 @@ class KNNhelen(object):
 
         # print self.classLabelVector[0: 10]
         # print self.classLabelVectornum[0: 10]
+        # print self.m
 
     # 图形化展示样本数据
     def show(self):
         fig = plt.figure(figsize=(12, 6))  # 创建一幅图，指定图的尺寸。
         pylab.mpl.rcParams['font.sans-serif'] = ['SimHei']  # 设置字体
         # mpl.rcParams['axes.unicode_minus'] = False  # 支持负号显示
-        plt.suptitle(u'训练样本散点图')
+        plt.suptitle(u'训练样本散点图')  # 整个图的大标题
         p1 = fig.add_subplot(1, 2, 1)  # 将图分割成1行2列，图像画在从左到右从上到下的第1块
         p1.set_title(u'图1')  # 子图标题
         p1.set_xlabel(u'玩视频游戏所耗时间百分比')  # 子图x横坐标标注
@@ -89,22 +99,44 @@ class KNNhelen(object):
         p2.scatter(self.returnMat[:, 0], self.returnMat[:, 1], 15.0*np.array(self.classLabelVectornum), 15.0*np.array(self.classLabelVectornum))  # 利用数字化的类标签向量指定颜色参数c和尺寸参数s，按类别个性化的指定每一个点的颜色和尺寸。散点上绘制了色彩不等、尺寸不同的点。
         plt.show()  # 显示
 
-    # 分类函数
+    # 归一化数据
+    def autoNorm(self):
+        self.minVals = self.returnMat.min(0)  # 返回每一列的最小值，1*3的列数的向量
+        self.maxVals = self.returnMat.max(0)  # 返回每一列的最大值，1*3的列数的向量
+        self.ranges = self.maxVals - self.minVals  # 返回每一列的极差，1*3的列数的向量，即数据的取值范围
+        self.normDateSet = np.zeros(self.returnMat.shape)  # 初始化特征归一化后的矩阵，维度与训练样本的特征矩阵相同
+        self.normDateSet = self.returnMat - np.tile(self.minVals, (self.m, 1))  # 每一列的最小值重复m行，重复扩充成m*3的矩阵。返回特征矩阵与最小值矩阵的差
+        self.normDateSet = self.normDateSet/np.tile(self.ranges, (self.m, 1))  # 每一列的极差重复m行，重复扩充成m*3的矩阵。返回特征数据归一化的矩阵
+        # print self.normDateSet[0]
+
+    # 输入向量self.inX的归一化
+    def inXautoNorm(self):
+        self.inX = (self.inX - self.minVals)/self.ranges
+        # print self.inX
+
+    # 分类函数，训练样本的三个特征同等重要，采用归一化后的训练样本。采用90%的数据作为训练样本训练分类器，其余的10%的数据作为测试样本去测试分类器
     def classifyO(self):
         # 计算输入向量与训练样本数据集之间的欧式距离
-        dataSetSize = self.group.shape[0]  # 训练样本集的维度,取其行数
-        diffMat = np.tile(self.inX, (dataSetSize, 1)) - self.group  # 输入向量纵向重复dataSetSize次，生成与训练样本数据集同维度的矩阵，再矩阵相减得到差
+        #diffMat = np.tile(self.inX, (self.m, 1)) - self.normDateSet  # 归一化的训练样本数据。输入向量纵向重复m次，生成与训练样本数据集同维度的矩阵，再矩阵相减得到差
+        #diffMat = np.tile(self.inX, (self.m, 1)) - self.returnMat  # 输入向量纵向重复m次，生成与训练样本数据集同维度的矩阵，再矩阵相减得到差
+
+        numTestVecs = int(self.m * self.hoRatio)  # 测试样本数量
+        numDateVecs = self.m - numTestVecs  #训练样本数量
+        #diffMat = np.tile(self.inX, (numDateVecs, 1)) - self.returnMat[numTestVecs:self.m, :]  # 选取一定数量的训练样本。输入向量纵向重复m次，生成与训练样本数据集同维度的矩阵，再矩阵相减得到差
+        diffMat = np.tile(self.inX, (numDateVecs, 1)) - self.normDateSet[numTestVecs:self.m, :]  # 选取一定数量的归一化后的训练样本。输入向量纵向重复m次，生成与训练样本数据集同维度的矩阵，再矩阵相减得到差
+
         sqDiffMat = diffMat ** 2  # 矩阵中的元素求平方
         sqDistances = np.sum(sqDiffMat, axis=1)  # 矩阵按照行的方向求和
         distances = sqDistances ** 0.5  # 矩阵中的元素开根号
 
         # 距离按升序排序
         sortedDistIndicies = np.argsort(distances)  # 数组升序排列，返回数组值从小到大的索引值
+        #print len(sortedDistIndicies)
 
         # 选取距离最小的前k个标签，并计算相应标签的频数
         classCount = {}
         for i in range(self.k):
-            voteIlabel = self.labels[sortedDistIndicies[i]]  # 取前k个距离最小的样本的标签
+            voteIlabel = self.classLabelVector[sortedDistIndicies[i]+numTestVecs]  # 取前k个距离最小的样本的标签
             classCount[voteIlabel] = classCount.get(voteIlabel, 0) + 1  # 计算标签的频数
 
         # 对距离最小的前k个标签的频数进行降序排序，返回频数最大时对应的标签
@@ -113,13 +145,13 @@ class KNNhelen(object):
 
 
 
-
-
-
 if __name__ == '__main__':
-
-    tit = KNNhelen('datingTestSet.txt')
+    tit = KNNhelen(filename='datingTestSet.txt', k=3, inX=[1000, 10, 0.5], hoRatio=0.1)
     tit.file2matrix()
-    tit.show()
+    #tit.show()
+    tit.autoNorm()
+    tit.inXautoNorm()
+    result = tit.classifyO()
+    print result
 
     print "---done---"

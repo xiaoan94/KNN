@@ -92,7 +92,7 @@ class HelenTest(object):
 
 
 if __name__ == '__main__':
-    tit = HelenTest(k=3, hoRatio=0.1, filename='datingTestSet.txt')
+    tit = HelenTest(k=10, hoRatio=0.1, filename='datingTestSet.txt')
     tit.file2matrix()
     tit.autoNorm()
     tit.datingClassTest()
@@ -101,6 +101,8 @@ if __name__ == '__main__':
 归一化       hoRatio       k          错误率（百分比）
   否          0.1          3            24.000000
   是          0.1          3             5.000000
+  是          0.5          3             6.400000
+  是          0.1          100           7.000000
 
 归一化对分类器的分类效果的影响：
 训练数据集的大小对分类器的分类效果的影响：

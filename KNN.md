@@ -367,6 +367,30 @@ array([[10, 10, 10, 20, 20],
 #numpy中的矩阵除法
 linalg.slove(mat1, mat2)
 
+#python中read()、readline()以及readlines()用法：
+
+###Python 可以将文本文件的内容读入可以操作的字符串变量。文件对象提供了三个“读”方法： .read()、.readline() 和 .readlines()。每种方法可以接受一个变量以限制每次读取的数据量，但它们通常不使用变量。 
+
+>* .read() 每次读取整个文件，它通常用于将文件内容放到一个字符串变量中。然而 .read() 生成文件内容是直接用字符串表示，但对于连续的面向行的处理，它却是不必要的，并且如果文件大于可用内存，则不可能实现这种处理。
+
+>* .readline() 和 .readlines() 非常相似。它们都在类似于以下的结构中使用：
+Python .readlines() 示例
+```python
+>>> fh = open('c:\\autoexec.bat')
+        
+>>> for  line in  fh.readlines(): 
+        
+>>> print  line
+```
+>* .readline() 和 .readlines() 之间的差异是后者一次读取整个文件，象 .read() 一样。.readlines() 自动将文件内容分析成一个行的列表，该列表可以由 Python 的 for ... in ... 结构进行处理。另一方面，.readline() 每次只读取一行，通常比 .readlines() 慢得多。仅当没有足够内存可以一次读取整个文件时，才应该使用 .readline()。
+
+>* python2.5之后已经把文件设置为一种可以迭代的类型。所以以下程序是最高效的方法：
+
+```python
+>>> f=open('data')
+>>> for line in f:
+>>> process(line)
+```
 
 
 
